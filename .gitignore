@@ -1,23 +1,16 @@
-# Python
-__pycache__/
-*.py[cod]
-*.egg-info/
-.venv/
+# venv & caches
 venv/
-.env
-.pytest_cache/
+__pycache__/
+*.pyc
+
+# coverage, pytest
+.coverage
 htmlcov/
-.coverage*
+.pytest_cache/
 
-# OS / tooling
-.DS_Store
-Thumbs.db
-
-# IDE/editor
-.vscode/
-.idea/
-*.code-workspace
-
-# Logs
-*.log
+# logs, history
 logs/
+history/
+
+# env
+.env
