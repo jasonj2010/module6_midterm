@@ -13,10 +13,20 @@ from app.history import HistoryObserver
 from app.operations import get_operation
 from app.logger import get_logger
 
+
 class Calculator:
-    def __init__(self, base_dir: Path | None = None):
-        base_dir = base_dir or Path.cwd()
-        self.config = CalculatorConfig.from_env(base_dir)
+    def __init__(self, base_dir: Path | CalculatorConfig | None = None):
+        """
+        Accept either:
+          - a CalculatorConfig instance (already constructed), or
+          - a Path (base_dir) / None (use cwd) and build config via from_env().
+        """
+        if isinstance(base_dir, CalculatorConfig):
+            self.config = base_dir
+        else:
+            base_dir = base_dir or Path.cwd()
+            self.config = CalculatorConfig.from_env(base_dir)
+
         self.config.validate()
         self.logger = get_logger(self.config.log_dir)
 
@@ -121,4 +131,4 @@ class Calculator:
 
     def get_history_dataframe(self) -> pd.DataFrame:
         rows = [c.to_dict() for c in self.history]
-        return pd.DataFrame(rows, columns=["operation","operand1","operand2","result","timestamp"])
+        return pd.DataFrame(rows, columns=["operation", "operand1", "operand2", "result", "timestamp"])
