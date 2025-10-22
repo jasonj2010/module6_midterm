@@ -3,7 +3,7 @@ from decimal import Decimal, getcontext
 from pathlib import Path
 from typing import List
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, UTC
 
 from app.calculation import Calculation
 from app.calculator_config import CalculatorConfig
@@ -61,7 +61,7 @@ class Calculator:
         except Exception as e:
             raise OperationError(str(e)) from e
 
-        calc = Calculation(op_name, da, db, result, datetime.utcnow())
+        calc = Calculation(op_name, da, db, result, datetime.now(UTC))
         self.history.append(calc)
         # truncate history if needed
         if len(self.history) > self.config.max_history_size:
