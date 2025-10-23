@@ -97,16 +97,17 @@ class Calculator:
         self.history = m.history.copy()
         return True
 
-    # persistence
+        # persistence
     def save_history(self) -> Path:
         df = self.get_history_dataframe()
-        path = Path(self.config.history_dir) / "calculator_history.csv"
+        path = Path(self.config.history_file)
+        path.parent.mkdir(parents=True, exist_ok=True)
         df.to_csv(path, index=False, encoding=self.config.default_encoding)
         self.logger.info("History saved to %s", path)
         return path
 
     def load_history(self) -> None:
-        path = Path(self.config.history_dir) / "calculator_history.csv"
+        path = Path(self.config.history_file)
         if not path.exists():
             self.logger.info("No history file at %s", path)
             return
