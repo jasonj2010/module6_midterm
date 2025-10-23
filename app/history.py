@@ -1,24 +1,30 @@
 from __future__ import annotations
-from abc import ABC, abstractmethod
-import pandas as pd
-from pathlib import Path
+from dataclasses import dataclass
+from typing import Protocol, List
 from app.calculation import Calculation
 
-class HistoryObserver(ABC):
-    @abstractmethod
-    def update(self, calculator: "Calculator", calc: Calculation) -> None: ...
+class HistoryObserver(Protocol):
+    def update(self, calculator: "Calculator", calc: Calculation) -> None:  # pragma: no cover (interface)
+        ...
 
-class LoggingObserver(HistoryObserver):
+@dataclass
+class LoggingObserver:
+    """Observer that logs each calculation using the calculator's configured logger."""
     def update(self, calculator: "Calculator", calc: Calculation) -> None:
+        # Reuse calculator.logger
         calculator.logger.info(
-            "Calculated %s(%s, %s) = %s",
-            calc.operation, calc.operand1, calc.operand2, calc.result
+            "calc: %s(%s, %s) = %s @ %s",
+            calc.operation,
+            calc.operand1,
+            calc.operand2,
+            calc.result,
+            calc.timestamp,
         )
 
-class AutoSaveObserver(HistoryObserver):
+@dataclass
+class AutoSaveObserver:
+    """Observer that auto-saves history after each successful calculation."""
     def update(self, calculator: "Calculator", calc: Calculation) -> None:
-        # Save entire history to CSV
-        df = calculator.get_history_dataframe()
-        path = Path(calculator.config.history_dir) / "calculator_history.csv"
-        df.to_csv(path, index=False, encoding=calculator.config.default_encoding)
-        calculator.logger.info("Auto-saved history to %s", path)
+        # Only save if config says so
+        if calculator.config.auto_save:
+            calculator.save_history()

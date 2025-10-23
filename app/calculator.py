@@ -9,18 +9,13 @@ from app.calculation import Calculation
 from app.calculator_config import CalculatorConfig
 from app.calculator_memento import CalculatorMemento
 from app.exceptions import OperationError, ValidationError
-from app.history import HistoryObserver
+from app.history import HistoryObserver, LoggingObserver, AutoSaveObserver
 from app.operations import get_operation
 from app.logger import get_logger
 
-
 class Calculator:
     def __init__(self, base_dir: Path | CalculatorConfig | None = None):
-        """
-        Accept either:
-          - a CalculatorConfig instance (already constructed), or
-          - a Path (base_dir) / None (use cwd) and build config via from_env().
-        """
+        # Allow passing a Path (base_dir) or a fully-built CalculatorConfig
         if isinstance(base_dir, CalculatorConfig):
             self.config = base_dir
         else:
@@ -38,7 +33,17 @@ class Calculator:
         self.undo_stack: List[CalculatorMemento] = []
         self.redo_stack: List[CalculatorMemento] = []
 
+        # Register default observers (logging always; autosave only if enabled)
+        self._register_default_observers()
+
     # ---- observers
+    def _register_default_observers(self) -> None:
+        # Always log each calculation
+        self.add_observer(LoggingObserver())
+        # Conditionally autosave
+        if self.config.auto_save:
+            self.add_observer(AutoSaveObserver())
+
     def add_observer(self, observer: HistoryObserver) -> None:
         self.observers.append(observer)
         self.logger.info("Observer added: %s", observer.__class__.__name__)
@@ -97,17 +102,17 @@ class Calculator:
         self.history = m.history.copy()
         return True
 
-        # persistence
+    # persistence
     def save_history(self) -> Path:
         df = self.get_history_dataframe()
-        path = Path(self.config.history_file)
+        path = self.config.history_file
         path.parent.mkdir(parents=True, exist_ok=True)
         df.to_csv(path, index=False, encoding=self.config.default_encoding)
         self.logger.info("History saved to %s", path)
         return path
 
     def load_history(self) -> None:
-        path = Path(self.config.history_file)
+        path = self.config.history_file
         if not path.exists():
             self.logger.info("No history file at %s", path)
             return
@@ -132,4 +137,4 @@ class Calculator:
 
     def get_history_dataframe(self) -> pd.DataFrame:
         rows = [c.to_dict() for c in self.history]
-        return pd.DataFrame(rows, columns=["operation", "operand1", "operand2", "result", "timestamp"])
+        return pd.DataFrame(rows, columns=["operation","operand1","operand2","result","timestamp"])
