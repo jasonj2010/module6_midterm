@@ -1,79 +1,131 @@
-# Module 6 Midterm — Advanced Calculator
+# Module 6 Midterm - Advanced Calculator
 
-A modular, testable, and configurable command-line calculator featuring advanced arithmetic, design patterns (Factory, Memento, Observer), persistent history with pandas, comprehensive error handling, and CI coverage enforcement.
+## Overview
+This project is a full-featured command-line calculator that demonstrates multiple object-oriented design patterns and CI/CD integration. The application performs advanced arithmetic operations, maintains an undo/redo history using the Memento Pattern, logs and auto-saves results using the Observer Pattern, and supports configuration management through .env variables. Continuous Integration via GitHub Actions enforces a minimum 90% test coverage.
 
 ## Features
-- Performs advanced arithmetic operations: add, subtract, multiply, divide, power, root, modulus, integer division, percent, and absolute difference.  
-- Maintains full calculation history with undo/redo using the Memento design pattern.  
-- Uses the Observer pattern for logging and auto-save.  
-- Saves and loads calculation history to CSV using pandas.  
-- Reads environment-based configuration via CalculatorConfig.  
-- Structured logging for debugging and audit trails.  
-- Achieves over 90% test coverage with pytest and pytest-cov.  
-- CI workflow validates tests and coverage automatically on each push or pull request.
+- Factory Pattern for dynamic operation creation  
+- Memento Pattern for undo/redo history management  
+- Observer Pattern with Logging and AutoSave observers  
+- Configuration Management through .env and environment variables  
+- Comprehensive Logging with Python’s logging module  
+- Data Persistence of calculation history via pandas (CSV)  
+- Command-Line REPL supporting arithmetic operations and history control  
+- Continuous Integration workflow enforcing coverage ≥ 90%  
+- Test Coverage: 93% (22 tests passed)
 
 ## Directory Structure
-app/  
- calculator.py  
- calculator_config.py  
- calculation.py  
- calculator_memento.py  
- history.py  
- operations.py  
- logger.py  
-tests/  
- test_calculator.py  
- test_history_undo_redo.py  
- test_operations_more.py  
- test_calculator_extras.py  
-.github/workflows/  
- python-app.yml  
-.gitignore  
-.coveragerc  
-requirements.txt  
-README.md
+module6_midterm/
+├── app/
+│   ├── __init__.py
+│   ├── calculator.py
+│   ├── calculation.py
+│   ├── calculator_config.py
+│   ├── calculator_memento.py
+│   ├── exceptions.py
+│   ├── history.py
+│   ├── operations.py
+│   ├── logger.py
+│   └── calculator_repl.py
+├── tests/
+│   ├── __init__.py
+│   ├── test_calculator.py
+│   ├── test_calculator_extras.py
+│   ├── test_observers.py
+│   ├── test_operations.py
+│   └── ...
+├── .env.example
+├── requirements.txt
+├── README.md
+└── .github/
+    └── workflows/
+        └── python-app.yml
 
-## Setup
-### Create and activate a virtual environment
-Windows (PowerShell):  
-python -m venv venv  
-venv\Scripts\Activate.ps1  
+## Installation
+1. Clone the repository  
+   git clone <your-repo-url>  
+   cd module6_midterm  
 
-macOS/Linux:  
-python3 -m venv venv  
-source venv/bin/activate  
+2. Create a virtual environment  
+   python -m venv venv  
+   source venv/Scripts/activate  (Windows)  
+   source venv/bin/activate      (macOS/Linux)  
 
-### Install dependencies
-pip install -r requirements.txt  
+3. Install dependencies  
+   pip install -r requirements.txt  
 
-### Run tests with coverage
-pytest --cov=app --cov-report=term-missing  
+## Configuration
+Copy .env.example to .env and adjust as needed:  
+CALCULATOR_LOG_DIR=./logs  
+CALCULATOR_HISTORY_DIR=./history  
+CALCULATOR_MAX_HISTORY_SIZE=100  
+CALCULATOR_AUTO_SAVE=true  
+CALCULATOR_PRECISION=6  
+CALCULATOR_MAX_INPUT_VALUE=1000000000000  
+CALCULATOR_DEFAULT_ENCODING=utf-8  
 
-### (Optional) Run interactively
+Ensure .env is included in .gitignore to protect configuration values.
+
+## Usage
+Start the calculator’s REPL interface:  
 python -m app.calculator_repl  
 
-## Example Usage
-from app.calculator import Calculator  
-calc = Calculator()  
-print(calc.perform("add", 10, 5))  
-calc.save_history()  
+### Supported Commands
+add, subtract, multiply, divide – Basic arithmetic  
+power – Exponentiation  
+root – nth root calculation  
+modulus – Remainder of division  
+int_divide – Integer division  
+percent – (a / b) × 100  
+abs_diff – Absolute difference  
+undo / redo – Revert or reapply last calculation  
+history – Show past operations  
+clear – Clear history  
+save / load – Manually save or load history  
+help – Display command list  
+exit – Quit the program  
 
-## Design Patterns
-**Factory + Strategy:** operations.py builds and executes operations dynamically.  
-**Memento:** calculator_memento.py handles undo/redo by snapshotting history.  
-**Observer:** history.py triggers logging and auto-save on new calculations.  
-**Facade:** calculator.py exposes a simple interface while coordinating internal modules.
+### Example Session
+add 4 9  
+power 2 8  
+percent 25 200  
+history  
+undo  
+redo  
+save  
+exit  
 
-## Error Handling
-- Invalid or non-numeric input raises ValidationError.  
-- Division by zero and invalid roots raise OperationError.  
-- Out-of-bounds inputs are prevented by configurable limits.  
-- Directories and files are auto-created when missing.
+## Testing
+Run the full test suite with coverage:  
+pytest  
 
-## Testing & CI
-All 20 tests pass successfully.  
-Coverage achieved: **91.11%**.  
-Continuous integration enforces coverage >= 90% and runs pytest automatically for all branches and pull requests.
+Generate detailed coverage report:  
+pytest --cov=app --cov-report=html  
 
-## Reflection
-This midterm project demonstrated full-cycle software development practices—using design patterns, environment-based configuration, structured logging, and disciplined version control. Building the calculator as modular components clarified the value of test-driven design. Achieving high coverage ensured reliability and maintainability. Incremental commits, consistent documentation, and continuous integration mirrored professional engineering workflows and emphasized quality at every stage.
+Coverage reports are written to htmlcov/index.html.  
+
+Latest Local Results:  
+22 passed, 0 failed  
+Total coverage: 93%  
+
+## Continuous Integration (GitHub Actions)
+A workflow in .github/workflows/python-app.yml automatically:  
+- Checks out the repository  
+- Installs dependencies  
+- Runs all tests with pytest  
+- Enforces minimum 90% coverage  
+
+Example step:  
+Run tests with pytest and enforce 90% coverage  
+pytest --cov=app --cov-fail-under=90  
+
+## Design Patterns Implemented
+- Factory Pattern: Creates operation objects dynamically  
+- Memento Pattern: Enables undo/redo of calculation history  
+- Observer Pattern: LoggingObserver and AutoSaveObserver respond to events  
+- Decorator/Command Pattern (optional): Extensible for extra credit  
+
+## Logging and History
+- Logs are stored in the directory defined by CALCULATOR_LOG_DIR.  
+- Calculation history is persisted as a CSV file (history/calculator_history.csv).  
+- Auto-saving occurs automatically when CALCULATOR_AUTO_SAVE=true.  
