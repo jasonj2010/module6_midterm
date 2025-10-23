@@ -1,4 +1,4 @@
-# Module 6 Midterm — Advanced Calculator
+# Module 6 Midterm - Advanced Calculator
 
 A modular, testable, and configurable command-line calculator featuring advanced arithmetic, design patterns (Factory, Memento, Observer), persistent history with pandas, comprehensive error handling, and CI coverage enforcement.
 
