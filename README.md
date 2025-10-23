@@ -14,33 +14,6 @@ This project is a full-featured command-line calculator that demonstrates multip
 - Continuous Integration workflow enforcing coverage ≥ 90%  
 - Test Coverage: 93% (22 tests passed)
 
-## Directory Structure
-module6_midterm/
-├── app/
-│   ├── __init__.py
-│   ├── calculator.py
-│   ├── calculation.py
-│   ├── calculator_config.py
-│   ├── calculator_memento.py
-│   ├── exceptions.py
-│   ├── history.py
-│   ├── operations.py
-│   ├── logger.py
-│   └── calculator_repl.py
-├── tests/
-│   ├── __init__.py
-│   ├── test_calculator.py
-│   ├── test_calculator_extras.py
-│   ├── test_observers.py
-│   ├── test_operations.py
-│   └── ...
-├── .env.example
-├── requirements.txt
-├── README.md
-└── .github/
-    └── workflows/
-        └── python-app.yml
-
 ## Installation
 1. Clone the repository  
    git clone <your-repo-url>  
