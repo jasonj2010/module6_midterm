@@ -76,4 +76,4 @@ Coverage achieved: **91.11%**.
 Continuous integration enforces coverage >= 90% and runs pytest automatically for all branches and pull requests.
 
 ## Reflection
-This midterm project demonstrated full-cycle software development practices—using design patterns, environment-based configuration, structured logging, and disciplined version control. Building the calculator as modular components clarified the value of test-driven design. Achieving high coverage ensured reliability and maintainability. Incremental commits, consistent documentation, and continuous integration mirrored professional engineering workflows and emphasized quality at every stage.
+This midterm project demonstrated full-cycle software development practices, using design patterns, environment-based configuration, structured logging, and disciplined version control. Building the calculator as modular components clarified the value of test-driven design.
